@@ -85,7 +85,7 @@ if(window.addEventListener) {
 
         function init () {
 
-            // Find the canvas element.
+            
             drawingArea = ENCOG.GUI.Drawing.create('drawing-area',300,300);
             downsampleArea = ENCOG.GUI.CellGrid.create('downsampleView',DOWNSAMPLE_WIDTH,DOWNSAMPLE_HEIGHT,110,120);
 
@@ -123,11 +123,7 @@ if(window.addEventListener) {
             preload();
         }
 
-        /////////////////////////////////////////////////////////////////////////////
-        // Event functions
-        /////////////////////////////////////////////////////////////////////////////
-
-        // Called when the "Teach" button is clicked.
+      
         function ev_teach(ev)
         {
             var data = drawingArea.performDownSample();
@@ -162,7 +158,6 @@ if(window.addEventListener) {
             }
         }
 
-        // Called when the "Remove" button is clicked.
         function ev_remove(ev)
         {
             for (var i = lstLetters.length - 1; i>=0; i--) {
@@ -173,21 +168,20 @@ if(window.addEventListener) {
             clearDownSample();
         }
 
-        // Called when the "Downsample" button is clicked
+       
         function ev_downSample(ev)
         {
             downSampleData = drawingArea.performDownSample();
             displaySample();
         }
 
-        // Called when the "Clear" button is clicked
         function ev_clear(ev)
         {
             drawingArea.clear();
             clearDownSample();
         }
 
-        // Called when the selected letter changes
+       
         function ev_selectList (ev)
         {
             var c = lstLetters.options[lstLetters.selectedIndex].text;
@@ -195,7 +189,7 @@ if(window.addEventListener) {
             displaySample();
         }
 
-        // Called when the "Recognize" button is clicked
+       
         function ev_recognize (ev)
         {
             downSampleData = drawingArea.performDownSample();
@@ -217,9 +211,7 @@ if(window.addEventListener) {
                 {
                     var data = charData[c];
 
-// Now we will actually recognize the letter drawn.
-// To do this, we will use a Euclidean distance
-// http://www.heatonresearch.com/wiki/Euclidean_Distance
+// rekognisi dengan Euclidean distance
 
                     var sum = 0;
                     for(var i = 0; i<data.length; i++ )
@@ -230,9 +222,7 @@ if(window.addEventListener) {
 
                     sum = Math.sqrt(sum);
 
-// Basically we are calculating the Euclidean distance between
-// what was just drawn, and each of the samples we taught
-// the program.  The smallest Euclidean distance is the char.
+// hasil perhitungan Euclidean distance terkecil adalah karakter yang dimaksud.
 
                     if( sum<bestScore || bestChar=='??' )
                     {
@@ -255,7 +245,7 @@ if(window.addEventListener) {
             displaySample();
         }
 
-        // Preload the digits, so that the user can quickly do some OCR if desired.
+       
         function preload()
         {
             defineChar("0", new Array( -1,1,1,1,-1,1,1,-1,1,1,1,-1,-1,-1,1,1,-1,-1,-1,1,1,-1,-1,-1,1,1,-1,-1,-1,1,1,1,-1,-1,1,-1,1,1,1,-1 ) );
@@ -270,20 +260,18 @@ if(window.addEventListener) {
             defineChar("9", new Array(1,1,1,1,1,1,1,-1,-1,1,1,-1,-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,1) );
         }
 
-        // Define a character, add it to the list and to the map.
         function defineChar(charEntered,data)
         {
             charData[charEntered] = data;
             lstLetters.add(new Option(charEntered));
         }
 
-        // Display downsampled data to the grid.
         function displaySample()
         {
             downsampleArea.render();
         }
 
-        // cause the init function to be called.
+       
         init();
 
     }, false); }
