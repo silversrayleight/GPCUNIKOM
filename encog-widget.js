@@ -1,25 +1,5 @@
 /*
- * Encog(tm) Core v0.1 - Javascript Version
- * http://www.heatonresearch.com/encog/
  * http://code.google.com/p/encog-java/
-
- * Copyright 2008-2012 Heaton Research, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *   
- * For more information on Heaton Research copyrights, licenses 
- * and trademarks visit:
- * http://www.heatonresearch.com/copyright
  */
 
 ENCOG.namespace('ENCOG.GUI.Console');
@@ -254,7 +234,7 @@ ENCOG.GUI.Drawing.prototype =
     downsampleWidth:5,
 
 
-    // Handle events to the canvas.  This allows drawing to occur.
+    
     ev_canvas:function (ev) {
         // Firefox
         if (ev.layerX || ev.layerX == 0) {
@@ -267,17 +247,12 @@ ENCOG.GUI.Drawing.prototype =
             ev._y = ev.offsetY;
         }
 
-// This is called when you start holding down the mouse button.
-// This starts the pencil drawing.
         if (ev.type === 'mousedown') {
             this.drawingContext.beginPath();
             this.drawingContext.moveTo(ev._x, ev._y);
             this.started = true;
         }
 
-// This function is called every time you move the mouse. Obviously, it only
-// draws if the tool.started state is set to true (when you are holding down
-// the mouse button).
         else if (ev.type === 'mousemove') {
             if (this.started) {
                 this.drawingContext.lineTo(ev._x, ev._y);
@@ -285,7 +260,6 @@ ENCOG.GUI.Drawing.prototype =
             }
         }
 
-// This is called when you release the mouse button.
         else if (ev.type === 'mouseup') {
             if (this.started) {
                 this.drawingContext.lineTo(ev._x, ev._y);
@@ -318,8 +292,7 @@ ENCOG.GUI.Drawing.prototype =
             }
         }
     },
-    // Determine if the specificed horizontal line is clear.
-    // This is used to find the top and bottom cropping lines.
+ 
     isHLineClear:function (row) {
         var imgd = this.drawingContext.getImageData(0, row, this.canvas.width, 1);
         var pix = imgd.data;
@@ -333,8 +306,7 @@ ENCOG.GUI.Drawing.prototype =
         return true;
     },
 
-// Determine if the specificed vertical line is clear.
-// This is used to find the left and right cropping lines.
+
     isVLineClear:function (col) {
         var imgd = this.drawingContext.getImageData(col, 0, 1, this.canvas.height);
         var pix = imgd.data;
@@ -348,12 +320,11 @@ ENCOG.GUI.Drawing.prototype =
         return true;
     },
 
-// Downsample the drawing area.
     performDownSample:function () {
         'use strict';
         var top, bottom, left, right, cellWidth, cellHeight, result, resultIndex, row, col, pix, x, y, d, i, imgd;
 
-        // first find a bounding rectangle so that we can crop out unused space
+       
         top = 0;
 
         while (this.isHLineClear(top) && top < this.canvas.height) {
@@ -383,32 +354,26 @@ ENCOG.GUI.Drawing.prototype =
             ENCOG.ArrayUtil.fillArray(result, 0, result.length, -1);
             return result;
         }
-        //uncomment this if you want to see the cropping rectangle
-        //drawingContext.strokeRect(left,top,right-left,bottom-top);
-
-        // now downsample
+       
 
         cellWidth = (right - left) / this.downsampleWidth;
         cellHeight = (bottom - top) / this.downsampleHeight;
         result = new Array();
         resultIndex = 0;
 
-        // to downsample we are going to lay a "grid" over the drawing
-        // the grid's dimensions are defined by DOWNSAMPLE_HEIGHT and
-        // DOWNSAMPLE_WIDTH.  Typically 5x8.  If even one pixel is
-        // present in a grid square, it is downsampled to "black".
+      
 
         for (row = 0; row < this.downsampleHeight; row++) {
             for (col = 0; col < this.downsampleWidth; col++) {
                 x = (cellWidth * col) + left;
                 y = (cellHeight * row) + top;
 
-                // obtain pixel data for the grid square
+               
                 imgd = this.drawingContext.getImageData(x, y, cellWidth, cellHeight);
                 pix = imgd.data;
 
                 d = false;
-                // see if at least one pixel is "black"
+               
                 for (i = 0; i < pix.length; i++) {
                     if (pix[i] > 0) {
                         d = true;
@@ -416,8 +381,7 @@ ENCOG.GUI.Drawing.prototype =
                     }
                 }
 
-                // we are downsampling to an array where 1.0 is black, and -1.0 is white.
-                // this will be used for Euclidean distance measuring.
+               
                 if (d) {
                     result[resultIndex++] = 1.0;
                 } else {
@@ -434,7 +398,6 @@ ENCOG.GUI.Drawing.prototype =
 };
 
 
-////////////////////////////////////
 
 ENCOG.GUI.Agents2D = function () {
     'use strict'
@@ -452,7 +415,7 @@ ENCOG.GUI.Agents2D.create = function (id, canvasWidth, canvasHeight) {
     result.canvas = result.canvasDiv.getElementsByTagName('canvas')[0];
     result.drawingContext = result.canvas.getContext('2d');
 
-    // Attach the mousedown, mousemove and mouseup event listeners.
+    
     result.canvas.addEventListener('mousedown', function (e) {
         result.ev_canvas(e)
     }, true);
@@ -496,7 +459,7 @@ ENCOG.GUI.Agents2D.prototype =
     captureTouch:true,
 
 
-    // Handle events to the canvas.  This allows drawing to occur.
+  
     ev_canvas:function (ev) {
 
     },
@@ -516,20 +479,16 @@ ENCOG.GUI.Agents2D.prototype =
         var aff, r, r2, dy, dx, x, y, x2, y2, x3, y3, meanX, meanY, dx, dy, targetAngle, neighbors, nearest;
         var separation, alignment, cohesion, turnAmount;
 
-        // loop over all agents
+      
         for (var i = 0; i < this.agents.length; i++) {
-            // Each particle is moving in a fixed speed in a direction
-            // specified by the 2nd array element of the particle.
-            // Adjust the X & Y (stored in the first/second array element)
-            // to reflect this movement.
+
             r = this.agents[i][2] * (Math.PI / 180.0);
             dy = Math.cos(r);
             dx = Math.sin(r);
             this.agents[i][0] += (dx * this.agentSpeed);
             this.agents[i][1] += (dy * this.agentSpeed);
 
-            // Bound.  Handle particles that fly off the edge of the universe.
-            // These particles will loop to the other side of the universe.
+          
             if (this.agents[i][0] < 0) {
                 this.agents[i][0] = this.canvas.width;
             }
@@ -550,13 +509,11 @@ ENCOG.GUI.Agents2D.prototype =
         var aff, r, r2, dy, dx, x, y, x2, y2, x3, y3, meanX, meanY, dx, dy, targetAngle, neighbors, nearest, i;
         var separation, alignment, cohesion, turnAmount;
 
-        // clear the canvas.
+       
         this.canvas.width = this.canvas.width;
 
-        // loop over all particles.
+      
         for (i = 0; i < this.agents.length; i++) {
-            // Draw the particle.  Each particle is s small traingle that
-            // points in the direction that it is moving.
             x = this.agents[i][0];
             y = this.agents[i][1];
 
@@ -577,9 +534,6 @@ ENCOG.GUI.Agents2D.prototype =
             this.drawingContext.stroke();
         }
     },
-    // Plot gray lines to show an affinity group.  This is a particle and
-    // all other particles that are neighbors.  If two flocks have no lines
-    // between them, they have become independant.
     plotGroup:function (idx, others) {
         'use strict';
         var x1 = this.agents[idx][0];
@@ -603,7 +557,7 @@ ENCOG.GUI.Agents2D.prototype =
             ev._x = ev.layerX;
             ev._y = ev.layerY;
         }
-        // Opera
+       
         else if (ev.offsetX || ev.offsetX == 0) {
             ev._x = ev.offsetX;
             ev._y = ev.offsetY;
@@ -632,7 +586,6 @@ ENCOG.GUI.Agents2D.prototype =
 };
 
 
-////////////////////////////////////
 
 ENCOG.GUI.TSP = function () {
     'use strict'
@@ -650,7 +603,7 @@ ENCOG.GUI.TSP.create = function (id, canvasWidth, canvasHeight) {
     result.canvas = result.canvasDiv.getElementsByTagName('canvas')[0];
     result.drawingContext = result.canvas.getContext('2d');
 
-    // Attach the mousedown, mousemove and mouseup event listeners.
+  
     result.canvas.addEventListener('mousedown', function (e) {
         result.ev_canvas(e)
     }, true);
@@ -693,7 +646,7 @@ ENCOG.GUI.TSP.prototype =
     currentPath:null,
     tspMargin:10,
 
-    // Handle events to the canvas.  This allows drawing to occur.
+   
     ev_canvas:function (ev) {
 
     },
@@ -717,7 +670,7 @@ ENCOG.GUI.TSP.prototype =
     },
 
     resetCircle: function(count) {
-        // reset the cities
+       
         this.cities = [];
         var ratio = (2 * Math.PI) / count;
         var marginWidth = this.canvas.width - (this.tspMargin * 2);
