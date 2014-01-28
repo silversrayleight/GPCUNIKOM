@@ -14,7 +14,7 @@
 {
     border: 1px solid #000;
     padding:5px;
-    background: #c0c0c0;
+    background: blue;
     width: 420px;
     height: 340px;
     position: relative;
@@ -66,7 +66,7 @@
 
 --></style><div id="example-holder">
     <div id="drawing-area"></div><select id="lstLetters" size="10"></select><div id="example-btn1"><input id="btnRecognize" type="button" value="Kenali" /><input id="btnTeach" type="button" value="Learn" /><input id="btnClear" type="button" value="hapus" /><input id="btnDownsample" type="button" value="hapus sampel" /><input id="btnRemove" type="button" value="hapus data" /></div>
-    <p>	<div id="downsampleView"></div></p>
+    <p>        <div id="downsampleView"></div></p>
 </div>
 <script type="text/javascript">
 <!--//--><![CDATA[// ><!--
@@ -94,7 +94,7 @@ if(window.addEventListener) {
 
             downsampleArea.determineColor = function(row,col) {
                 var index = (row*this.gridWidth)+col;
-                if( downSampleData[index] < 0 )   {
+                if( downSampleData[index] < 0 ) {
                     return "white";
                 }
                 else {
@@ -145,7 +145,7 @@ if(window.addEventListener) {
                     }
                     else if( charEntered.length!=1 )
                     {
-                        alert("masukan hanya boleh 1 karakter.");
+                        alert("Please enter exactly one character.");
                     }
                     else
                     {
@@ -281,3 +281,4 @@ if(window.addEventListener) {
 
 </body>
 </html>
+
